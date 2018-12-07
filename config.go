@@ -11,6 +11,7 @@ type Config struct {
 	DefaultS3Bucket		*string
 	DefaultRegion		*string
 	DefaultSqsQueueUrl	*string
+	DefaultVpcID *string
 }
 
 var configInstance *Config
@@ -44,12 +45,18 @@ func GetConfig() (*Config) {
 			awsDefaultSqsQueueUrl = os.Getenv("AWS_DEFAULT_SQS_QUEUE_URL")
 		}
 
+        var awsDefaultVpcId string
+        if os.Getenv("AWS_DEFAULT_VPC_ID") != "" {
+			awsDefaultVpcId = os.Getenv("AWS_DEFAULT_VPC_ID")
+		}
+
 		configInstance = &Config{
 			AccessKeyId: &awsAccessKeyId,
 			SecretAccessKey: &awsSecretAccessKey,
 			DefaultRegion: &awsDefaultRegion,
 			DefaultS3Bucket: &awsDefaultS3Bucket,
 			DefaultSqsQueueUrl: &awsDefaultSqsQueueUrl,
+            DefaultVpcID: &awsDefaultVpcId,
 		}
 	})
 	return configInstance
