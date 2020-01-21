@@ -6,18 +6,19 @@ import (
 )
 
 type Config struct {
-	AccessKeyId		*string
-	SecretAccessKey		*string
-	DefaultS3Bucket		*string
-	DefaultRegion		*string
-	DefaultSqsQueueUrl	*string
-	DefaultVpcID *string
+	AccessKeyId           *string
+	SecretAccessKey       *string
+	DefaultS3Bucket       *string
+	DefaultRegion         *string
+	DefaultSqsQueueUrl    *string
+	DefaultVpcID          *string
+	DefaultCertificateArn *string
 }
 
 var configInstance *Config
 var configOnce sync.Once
 
-func GetConfig() (*Config) {
+func GetConfig() *Config {
 	configOnce.Do(func() {
 		var awsAccessKeyId string
 		if os.Getenv("AWS_ACCESS_KEY_ID") != "" {
@@ -45,18 +46,24 @@ func GetConfig() (*Config) {
 			awsDefaultSqsQueueUrl = os.Getenv("AWS_DEFAULT_SQS_QUEUE_URL")
 		}
 
-        var awsDefaultVpcId string
-        if os.Getenv("AWS_DEFAULT_VPC_ID") != "" {
+		var awsDefaultVpcId string
+		if os.Getenv("AWS_DEFAULT_VPC_ID") != "" {
 			awsDefaultVpcId = os.Getenv("AWS_DEFAULT_VPC_ID")
 		}
 
+		var awsDefaultCertificateArn string
+		if os.Getenv("AWS_DEFAULT_CERTIFICATE_ARN") != "" {
+			awsDefaultCertificateArn = os.Getenv("AWS_DEFAULT_CERTIFICATE_ARN")
+		}
+
 		configInstance = &Config{
-			AccessKeyId: &awsAccessKeyId,
-			SecretAccessKey: &awsSecretAccessKey,
-			DefaultRegion: &awsDefaultRegion,
-			DefaultS3Bucket: &awsDefaultS3Bucket,
-			DefaultSqsQueueUrl: &awsDefaultSqsQueueUrl,
-            DefaultVpcID: &awsDefaultVpcId,
+			AccessKeyId:           &awsAccessKeyId,
+			SecretAccessKey:       &awsSecretAccessKey,
+			DefaultRegion:         &awsDefaultRegion,
+			DefaultS3Bucket:       &awsDefaultS3Bucket,
+			DefaultSqsQueueUrl:    &awsDefaultSqsQueueUrl,
+			DefaultVpcID:          &awsDefaultVpcId,
+			DefaultCertificateArn: &awsDefaultCertificateArn,
 		}
 	})
 	return configInstance
